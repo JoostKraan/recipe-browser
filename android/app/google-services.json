@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "824344128733",
+    "firebase_url": "https://super-cool-project-9c548-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "super-cool-project-9c548",
+    "storage_bucket": "super-cool-project-9c548.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824344128733:android:d25bfb9783446755c73f34",
+        "android_client_info": {
+          "package_name": "com.example.recipe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC26ArSjff823zOFthzDvZAcFaWyzS8YBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
