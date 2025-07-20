@@ -2,9 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:recipe/components/svg_component.dart';
+import 'package:recipe/components/text_component.dart';
 import 'package:recipe/providers/constants-provider.dart';
 import 'package:recipe/services/database_service.dart';
 import 'package:recipe/firebase_options.dart';
+
+import 'components/add_recipe_dialog.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: 'Manrope',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(),
@@ -43,46 +48,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late Future<List<Map<String, dynamic>>> _recipesFuture;
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     _recipesFuture = _loadRecipes();
   }
+
   Future<List<Map<String, dynamic>>> _loadRecipes() async {
     return await DatabaseService().readAllData('recipes');
   }
-  Future<List<Map<String, dynamic>>> _createRecipe() async {
-    return await DatabaseService().createRecipe('aardappel', '10m');
-  }
 
-
-  void _showRecipeDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Text('Naam van recept'),
-          children: [
-            SimpleDialogOption(child: TextFormField()),
-            SimpleDialogOption(child: Column(
-              children: [
-                Row(children: [
-                  ActionChip(
-                    onPressed: () { print('f');},
-                    label: const Text('Aaron Burr'),
-                  ),
-                  ActionChip(
-                    onPressed: () { print('f');},
-                    label: const Text('Aaron Burr'),
-                  ),
-
-                ],)
-
-              ],
-            ),)
-          ],
-        );
-      },
+  Future<void> _createRecipe() async {
+    final updatedRecipes = await DatabaseService().createRecipe(
+      'Aardappelschotel',
+      '90m',
+      'Een schotel met aardappel?',
+      'null',
+      <String>[],
+      'Diner',
+      5,
+      3.5,
+      'Joost',
+      'Gisteren',
+      'Joost',
     );
+    setState(() {
+      _recipesFuture = Future.value(updatedRecipes);
+    });
   }
 
   @override
@@ -92,17 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: constants.primaryColor,
       appBar: AppBar(
         backgroundColor: constants.primaryColor,
-        title: Text(style: TextStyle(color: constants.fontColor), 'Recepten'),
+        title: btrText(text: 'Recepten'),
         actions: [
           IconButton(
             onPressed: () => context.read<ConstantsProvider>().toggleDarkMode(),
-            icon: SvgPicture.asset(
-              color: constants.iconColor,
+            icon: btrSvg(
+              image:
               context.read<ConstantsProvider>().isDarkMode
                   ? 'assets/icons/dark-mode.svg'
                   : 'assets/icons/light-mode.svg',
-              width: constants.iconSize,
-              height: constants.iconSize,
             ),
           ),
         ],
@@ -112,9 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _recipesFuture,
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No recipes found'));
+            return const Center(child: btrText(text:'No recipes found'));
           }
-
           final recipes = snapshot.data!;
           return ListView.builder(
             itemCount: recipes.length,
@@ -135,20 +123,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
-                          child: Text(
-                            style: TextStyle(color: constants.fontColor),
-                            name,
+                          child: btrText(text: name,
                           ),
                         ),
                       ),
                     ),
                   ),
                   IconButton(
-                    onPressed: null,
-                    icon: SvgPicture.asset(
+                    onPressed: () async {
+                      final updatedRecipes = await DatabaseService()
+                          .deleteRecipe('recipes', recipes[index]['id']);
+                      setState(() {
+                        _recipesFuture = Future.value(updatedRecipes);
+                      });
+                    },
+                    icon:btrSvg(
+                      image:
                       'assets/icons/delete.svg',
-                      width: constants.iconSize,
-                      height: constants.iconSize,
                       color: constants.errorColor,
                     ),
                   ),
@@ -160,11 +151,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: constants.successColor,
-        onPressed: _createRecipe,
-        child: SvgPicture.asset(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => const createRecipeDialog(),
+          );
+        },
+        child: btrSvg(image:
           'assets/icons/add.svg',
-          width: constants.iconSize,
-          height: constants.iconSize,
         ),
       ),
     );

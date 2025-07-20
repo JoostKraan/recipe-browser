@@ -26,7 +26,7 @@ class Constants{
         fontColor =  isDarkMode ? const Color(0xFFFFFFFF) : const Color(0xD10E1314)  ,
         iconColor =  isDarkMode ? const Color(0xFFFFFFFF) : const Color(0xD10E1314),
         iconSize = 25,
-        fontSize = 18,
+        fontSize = 25,
         mapurl = isDarkMode ? "https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=ME95gmQBq6fVpZys7OtD6VJLMx706vzQRALB4oZiea5VnbQ7rfH9xjiOIu5wyy5b"
                       : "https://tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token=ME95gmQBq6fVpZys7OtD6VJLMx706vzQRALB4oZiea5VnbQ7rfH9xjiOIu5wyy5b";
 }
