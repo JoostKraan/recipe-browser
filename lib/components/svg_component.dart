@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/constants-provider.dart';
+import '../providers/constants_provider.dart';
 
-class btrSvg extends StatelessWidget {
+class BtrSvg extends StatelessWidget {
   final String image;
   final Color? color;
-  const btrSvg({super.key,required this.image, this.color});
+  const BtrSvg({super.key,required this.image, this.color});
 
   @override
   Widget build(BuildContext context) {

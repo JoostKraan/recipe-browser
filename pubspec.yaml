@@ -61,6 +61,8 @@ flutter:
 
   assets:
      - assets/icons/
+     - assets/img/
+     - assets/fonts/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -75,10 +77,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Manrope
+    - family: LexendDeca
       fonts:
-        - asset: assets/fonts/Manrope-VariableFont_wght.ttf
-          weight: 400
+        - asset: assets/fonts/LexendDeca-VariableFont_wght.ttf
+
+
+
 
 
   # For details regarding fonts from package dependencies,

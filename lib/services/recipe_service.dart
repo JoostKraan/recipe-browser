@@ -1,54 +1,66 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DatabaseService {
+class RecipeService {
   var db = FirebaseFirestore.instance;
-  late var recipes = db.collection('recipes');
 
-  readAllData(String path) async {
+  Future<List<Map<String, dynamic>>>readAllData(String path) async {
     final ref = db.collection(path);
     final snapshot = await ref.get();
     return snapshot.docs.map((doc) => {"id": doc.id, ...doc.data()}).toList();
   }
+  Future<Map<String, dynamic>?> readRecipe(String id) async  {
+    final ref = db.collection("recipes").doc(id);
+    final doc = await ref.get();
+    if (doc.exists) {
+      return {
+        "id": doc.id,
+        ...doc.data() as Map<String, dynamic>,
+      };
+    } else {
+      return null;
+    }
+  }
 
-  createRecipe(
-    String name,
-    String cookingTime,
-    String description,
-    String link,
-    List<String> tags,
-    String category,
-    int servings,
-    double cooktimeRating,
-    String creator,
-    String lastUpdated,
-    String lastUpdatedBy,
-  ) async {
+  Future<List<Map<String, dynamic>>>createRecipe(
+      { String name = 'No name entered',
+        String cookingTime = '0m',
+        String description = 'N/A',
+        String? link = 'N/A',
+        String? image = 'null',
+        List<String>? tags,
+        String? category = 'N/A',
+        int? servings = 0,
+        String? cooktimeRating = 'N/A',
+        double? rating = 0.0,
+        String? creator = 'N/A',
+        DateTime? lastUpdated,
+        String? lastUpdatedBy = 'N/A'
+      }
+      ) async {
     final data = <String, dynamic>{
       "name": name,
       "cooking_time": cookingTime, //total cooking time in minutes including prep
       "description": description, //quick summary of recipe
       "link": link, //optional link to source of recipe like Albert heijn recipes
+      "image": image, //thumbnail image of recipe
       "tags": tags, //vegetarian,vegan,light meal, hefty meal
       "category": category, //breakfast, lunch, dinner
       "servings": servings, //default serving amount per person
       "cooktime_rating": cooktimeRating, //1-5
+      "rating" : rating,
       "creator": creator, //user that created the recipe
       "last_updated": lastUpdated,
       "last_updated_by": lastUpdatedBy,
     };
     db
-        .collection('recipes')
-        .add(data)
-        .then(
-          (documentSnapshot) =>
-              print("Added Data with ID: ${documentSnapshot.id}"),
-        );
+        .collection('recipes').doc(name)
+        .set(data);
     return await readAllData('recipes');
   }
 
-  deleteRecipe(String path, String id) async {
+  deleteRecipe(String id) async {
     db
-        .collection(path)
+        .collection('recipes')
         .doc(id)
         .delete()
         .then(
