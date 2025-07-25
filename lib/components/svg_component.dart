@@ -7,11 +7,12 @@ import '../providers/constants_provider.dart';
 class BtrSvg extends StatelessWidget {
   final String image;
   final Color? color;
-  const BtrSvg({super.key,required this.image, this.color});
+  final double? size;
+  const BtrSvg({super.key,required this.image, this.color,this.size});
 
   @override
   Widget build(BuildContext context) {
     final constants = context.watch<ConstantsProvider>().constants;
-    return SvgPicture.asset(image,width: constants.iconSize,height: constants.iconSize,color: color ?? constants.iconColor);
+    return SvgPicture.asset(image,width: size ?? constants.iconSize,height: size ?? constants.iconSize,color: color ?? constants.iconColor);
   }
 }

@@ -20,7 +20,6 @@ class RecipeService {
       return null;
     }
   }
-
   Future<List<Map<String, dynamic>>>createRecipe(
       { String name = 'No name entered',
         String cookingTime = '0m',
@@ -29,12 +28,14 @@ class RecipeService {
         String? image = 'null',
         List<String>? tags,
         String? category = 'N/A',
+        String? cuisine = 'N/A',
         int? servings = 0,
         String? cooktimeRating = 'N/A',
         double? rating = 0.0,
         String? creator = 'N/A',
         DateTime? lastUpdated,
-        String? lastUpdatedBy = 'N/A'
+        String? lastUpdatedBy = 'N/A',
+        List<Map<String, dynamic>>? ingredients,
       }
       ) async {
     final data = <String, dynamic>{
@@ -45,12 +46,14 @@ class RecipeService {
       "image": image, //thumbnail image of recipe
       "tags": tags, //vegetarian,vegan,light meal, hefty meal
       "category": category, //breakfast, lunch, dinner
+      "cuisine": cuisine,//Italian,Mexican,Indian Etc
       "servings": servings, //default serving amount per person
       "cooktime_rating": cooktimeRating, //1-5
       "rating" : rating,
       "creator": creator, //user that created the recipe
-      "last_updated": lastUpdated,
+      "last_updated": DateTime.now(),
       "last_updated_by": lastUpdatedBy,
+      "ingredients" : ingredients,
     };
     db
         .collection('recipes').doc(name)
@@ -67,6 +70,5 @@ class RecipeService {
           (doc) => print("Document deleted id: $id"),
           onError: (e) => print("Error updating document $e"),
         );
-    return await readAllData('recipes');
   }
 }
