@@ -131,7 +131,7 @@ class _RecipeState extends State<Recipe> {
                                 final result = await showDialog(
                                   context: context,
                                   builder: (context) => IngredientToRecipeDialog(
-                                    id: widget.id,
+                                    recipeId: widget.id,
                                     ingredientList: ingredientList,
                                   ),
                                 );
